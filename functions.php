@@ -1,41 +1,96 @@
-<?php
+<?php get_header(); ?>
 
-function rocket_theme_scripts() {
-    wp_enqueue_style('rocket-style', get_stylesheet_uri(), [], null);
-}
-add_action('wp_enqueue_scripts', 'rocket_theme_scripts');
+<main class="container">
 
-function rocket_theme_setup() {
-    add_theme_support('title-tag');
-    add_theme_support('post-thumbnails');
+    <section class="articles">
+        <h2>Статьи</h2>
 
-    register_nav_menus([
-        'primary' => 'Главное меню',
-    ]);
-}
-add_action('after_setup_theme', 'rocket_theme_setup');
+        <div class="articles-grid">
+            <?php
+            $articles_query = new WP_Query([
+                'post_type' => 'post',
+                'posts_per_page' => 3
+            ]);
 
-function rocket_register_post_types() {
-    register_post_type('promo', [
-        'labels' => [
-            'name' => 'Акции',
-            'singular_name' => 'Акция',
-            'add_new' => 'Добавить акцию',
-            'add_new_item' => 'Добавить новую акцию',
-            'edit_item' => 'Редактировать акцию',
-            'new_item' => 'Новая акция',
-            'view_item' => 'Посмотреть акцию',
-            'search_items' => 'Искать акции',
-            'not_found' => 'Акции не найдены',
-            'not_found_in_trash' => 'В корзине акций не найдено',
-            'menu_name' => 'Акции',
-        ],
-        'public' => true,
-        'has_archive' => true,
-        'menu_icon' => 'dashicons-megaphone',
-        'supports' => ['title', 'editor', 'thumbnail', 'excerpt'],
-        'rewrite' => ['slug' => 'promotions'],
-        'show_in_rest' => true,
-    ]);
-}
-add_action('init', 'rocket_register_post_types');
+            if ($articles_query->have_posts()) :
+                while ($articles_query->have_posts()) : $articles_query->the_post();
+            ?>
+                <article class="article-card">
+                    <?php if (has_post_thumbnail()) : ?>
+                        <a href="<?php the_permalink(); ?>" class="article-card__image">
+                            <?php the_post_thumbnail('medium_large'); ?>
+                        </a>
+                    <?php endif; ?>
+
+                    <div class="article-card__content">
+                        <h3>
+                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                        </h3>
+
+                        <p><?php echo wp_trim_words(get_the_excerpt(), 12); ?></p>
+
+                        <span class="article-card__date"><?php echo get_the_date('d.m.Y'); ?></span>
+                    </div>
+                </article>
+            <?php
+                endwhile;
+                wp_reset_postdata();
+            else :
+                echo '<p>Пока статей нет.</p>';
+            endif;
+            ?>
+        </div>
+    </section>
+
+    <section class="services">
+    <h2>Услуги</h2>
+
+    <div class="services-grid">
+        <?php
+        $promo_query = new WP_Query([
+            'post_type' => 'promo',
+            'posts_per_page' => 4
+        ]);
+
+        if ($promo_query->have_posts()) :
+            while ($promo_query->have_posts()) : $promo_query->the_post();
+
+                $price = get_post_meta(get_the_ID(), 'price', true);
+                $badge = get_post_meta(get_the_ID(), 'badge', true);
+        ?>
+            <article class="service-card">
+                <?php if (has_post_thumbnail()) : ?>
+                    <a href="<?php the_permalink(); ?>" class="service-card__image">
+                        <?php if ($badge) : ?>
+                            <span class="service-card__badge"><?php echo esc_html($badge); ?></span>
+                        <?php endif; ?>
+
+                        <?php the_post_thumbnail('medium_large'); ?>
+                    </a>
+                <?php endif; ?>
+
+                <div class="service-card__content">
+                    <h3>
+                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    </h3>
+
+                    <p><?php echo wp_trim_words(get_the_excerpt(), 10); ?></p>
+
+                    <?php if ($price) : ?>
+                        <span class="service-card__price">от <?php echo esc_html($price); ?> ₽</span>
+                    <?php endif; ?>
+                </div>
+            </article>
+        <?php
+            endwhile;
+            wp_reset_postdata();
+        else :
+            echo '<p>Пока акций нет.</p>';
+        endif;
+        ?>
+    </div>
+</section>
+
+</main>
+
+<?php get_footer(); ?>
