@@ -10,6 +10,12 @@
             <?php endif; ?>
 
             <h1><?php the_title(); ?></h1>
+
+            <?php $price = get_post_meta(get_the_ID(), 'price', true); ?>
+            <?php if ($price) : ?>
+                <div class="single-promo__price">от <?php echo esc_html($price); ?> ₽</div>
+            <?php endif; ?>
+
             <div class="single-promo__content">
                 <?php the_content(); ?>
             </div>

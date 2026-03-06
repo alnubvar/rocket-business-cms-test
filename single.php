@@ -10,7 +10,11 @@
             <?php endif; ?>
 
             <h1><?php the_title(); ?></h1>
-            <div class="single-article__date"><?php echo get_the_date('d.m.Y'); ?></div>
+
+            <div class="single-article__date">
+                <?php echo get_the_date('d.m.Y'); ?>
+            </div>
+
             <div class="single-article__content">
                 <?php the_content(); ?>
             </div>

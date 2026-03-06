@@ -1,9 +1,19 @@
 <?php
 
 function rocket_theme_scripts() {
-    wp_enqueue_style('rocket-style', get_stylesheet_uri());
+    wp_enqueue_style('rocket-style', get_stylesheet_uri(), [], null);
 }
 add_action('wp_enqueue_scripts', 'rocket_theme_scripts');
+
+function rocket_theme_setup() {
+    add_theme_support('title-tag');
+    add_theme_support('post-thumbnails');
+
+    register_nav_menus([
+        'primary' => 'Главное меню',
+    ]);
+}
+add_action('after_setup_theme', 'rocket_theme_setup');
 
 function rocket_register_post_types() {
     register_post_type('promo', [
@@ -17,6 +27,7 @@ function rocket_register_post_types() {
             'view_item' => 'Посмотреть акцию',
             'search_items' => 'Искать акции',
             'not_found' => 'Акции не найдены',
+            'not_found_in_trash' => 'В корзине акций не найдено',
             'menu_name' => 'Акции',
         ],
         'public' => true,
@@ -28,9 +39,3 @@ function rocket_register_post_types() {
     ]);
 }
 add_action('init', 'rocket_register_post_types');
-
-function rocket_theme_setup() {
-    add_theme_support('post-thumbnails');
-    add_theme_support('title-tag');
-}
-add_action('after_setup_theme', 'rocket_theme_setup');
