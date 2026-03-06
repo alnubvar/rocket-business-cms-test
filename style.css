@@ -139,3 +139,44 @@ footer {
     background: #9c9c9c;
     color: #fff;
 }
+
+.single-page {
+    padding-top: 40px;
+    padding-bottom: 80px;
+}
+
+.single-article,
+.single-promo {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 24px;
+    border: 1px solid #ddd;
+}
+
+.single-article__image img,
+.single-promo__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 24px;
+}
+
+.single-article h1,
+.single-promo h1 {
+    margin: 0 0 16px;
+    font-size: 42px;
+    line-height: 1.2;
+}
+
+.single-article__date {
+    margin-bottom: 24px;
+    color: #888;
+    font-size: 14px;
+}
+
+.single-article__content,
+.single-promo__content {
+    font-size: 18px;
+    line-height: 1.7;
+}
