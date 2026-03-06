@@ -423,3 +423,33 @@ footer h3 {
         font-size: 26px;
     }
 }
+
+.services-slider-dots {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .services-slider-dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .services-slider-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 0;
+        background: #d8d8d8;
+        padding: 0;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .services-slider-dot.is-active {
+        background: #222;
+        transform: scale(1.1);
+    }
+}

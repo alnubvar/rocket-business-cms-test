@@ -49,7 +49,7 @@
             <?php
             $promo_query = new WP_Query([
                 'post_type' => 'promo',
-                'posts_per_page' => 4
+                'posts_per_page' => 10
             ]);
 
             if ($promo_query->have_posts()) :
@@ -99,6 +99,8 @@
             endif;
             ?>
         </div>
+
+        <div class="services-slider-dots" aria-label="Навигация по услугам"></div>
     </section>
 
 </main>

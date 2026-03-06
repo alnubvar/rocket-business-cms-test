@@ -1,96 +1,127 @@
-<?php get_header(); ?>
+<?php
 
-<main class="container">
+function rocket_theme_scripts() {
+    wp_enqueue_style(
+        'rocket-style',
+        get_stylesheet_uri(),
+        [],
+        filemtime(get_stylesheet_directory() . '/style.css')
+    );
 
-    <section class="articles">
-        <h2>Статьи</h2>
+    wp_enqueue_script(
+        'rocket-slider',
+        get_template_directory_uri() . '/slider.js',
+        [],
+        filemtime(get_template_directory() . '/slider.js'),
+        true
+    );
+}
+add_action('wp_enqueue_scripts', 'rocket_theme_scripts');
 
-        <div class="articles-grid">
-            <?php
-            $articles_query = new WP_Query([
-                'post_type' => 'post',
-                'posts_per_page' => 3
-            ]);
+function rocket_theme_setup() {
+    add_theme_support('title-tag');
+    add_theme_support('post-thumbnails');
 
-            if ($articles_query->have_posts()) :
-                while ($articles_query->have_posts()) : $articles_query->the_post();
-            ?>
-                <article class="article-card">
-                    <?php if (has_post_thumbnail()) : ?>
-                        <a href="<?php the_permalink(); ?>" class="article-card__image">
-                            <?php the_post_thumbnail('medium_large'); ?>
-                        </a>
-                    <?php endif; ?>
+    register_nav_menus([
+        'primary' => 'Главное меню',
+    ]);
+}
+add_action('after_setup_theme', 'rocket_theme_setup');
 
-                    <div class="article-card__content">
-                        <h3>
-                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                        </h3>
+function rocket_register_post_types() {
+    register_post_type('promo', [
+        'labels' => [
+            'name' => 'Акции',
+            'singular_name' => 'Акция',
+            'add_new' => 'Добавить акцию',
+            'add_new_item' => 'Добавить новую акцию',
+            'edit_item' => 'Редактировать акцию',
+            'new_item' => 'Новая акция',
+            'view_item' => 'Посмотреть акцию',
+            'search_items' => 'Искать акции',
+            'not_found' => 'Акции не найдены',
+            'not_found_in_trash' => 'В корзине акций не найдено',
+            'menu_name' => 'Акции',
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-megaphone',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt'],
+        'rewrite' => ['slug' => 'promotions'],
+        'show_in_rest' => true,
+    ]);
+}
+add_action('init', 'rocket_register_post_types');
 
-                        <p><?php echo wp_trim_words(get_the_excerpt(), 12); ?></p>
+function rocket_add_promo_meta_box() {
+    add_meta_box(
+        'rocket_promo_meta',
+        'Параметры акции',
+        'rocket_promo_meta_callback',
+        'promo',
+        'normal',
+        'default'
+    );
+}
+add_action('add_meta_boxes', 'rocket_add_promo_meta_box');
 
-                        <span class="article-card__date"><?php echo get_the_date('d.m.Y'); ?></span>
-                    </div>
-                </article>
-            <?php
-                endwhile;
-                wp_reset_postdata();
-            else :
-                echo '<p>Пока статей нет.</p>';
-            endif;
-            ?>
-        </div>
-    </section>
+function rocket_promo_meta_callback($post) {
+    $price = get_post_meta($post->ID, 'price', true);
+    $badges = get_post_meta($post->ID, 'badges', true);
 
-    <section class="services">
-    <h2>Услуги</h2>
+    wp_nonce_field('rocket_save_promo_meta', 'rocket_promo_meta_nonce');
+    ?>
+    <p>
+        <label for="rocket_price"><strong>Цена</strong></label><br>
+        <input
+            type="text"
+            id="rocket_price"
+            name="price"
+            value="<?php echo esc_attr($price); ?>"
+            style="width: 100%;"
+        >
+    </p>
 
-    <div class="services-grid">
-        <?php
-        $promo_query = new WP_Query([
-            'post_type' => 'promo',
-            'posts_per_page' => 4
-        ]);
+    <p>
+        <label for="rocket_badges"><strong>Бейджи</strong></label><br>
+        <input
+            type="text"
+            id="rocket_badges"
+            name="badges"
+            value="<?php echo esc_attr($badges); ?>"
+            style="width: 100%;"
+        >
+    </p>
 
-        if ($promo_query->have_posts()) :
-            while ($promo_query->have_posts()) : $promo_query->the_post();
+    <p>
+        <small>Указывай несколько бейджей через запятую. Например: Скидка, Акция</small>
+    </p>
+    <?php
+}
 
-                $price = get_post_meta(get_the_ID(), 'price', true);
-                $badge = get_post_meta(get_the_ID(), 'badge', true);
-        ?>
-            <article class="service-card">
-                <?php if (has_post_thumbnail()) : ?>
-                    <a href="<?php the_permalink(); ?>" class="service-card__image">
-                        <?php if ($badge) : ?>
-                            <span class="service-card__badge"><?php echo esc_html($badge); ?></span>
-                        <?php endif; ?>
+function rocket_save_promo_meta($post_id) {
+    if (!isset($_POST['rocket_promo_meta_nonce'])) {
+        return;
+    }
 
-                        <?php the_post_thumbnail('medium_large'); ?>
-                    </a>
-                <?php endif; ?>
+    if (!wp_verify_nonce($_POST['rocket_promo_meta_nonce'], 'rocket_save_promo_meta')) {
+        return;
+    }
 
-                <div class="service-card__content">
-                    <h3>
-                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                    </h3>
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
 
-                    <p><?php echo wp_trim_words(get_the_excerpt(), 10); ?></p>
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
 
-                    <?php if ($price) : ?>
-                        <span class="service-card__price">от <?php echo esc_html($price); ?> ₽</span>
-                    <?php endif; ?>
-                </div>
-            </article>
-        <?php
-            endwhile;
-            wp_reset_postdata();
-        else :
-            echo '<p>Пока акций нет.</p>';
-        endif;
-        ?>
-    </div>
-</section>
+    if (isset($_POST['price'])) {
+        update_post_meta($post_id, 'price', sanitize_text_field($_POST['price']));
+    }
 
-</main>
-
-<?php get_footer(); ?>
+    if (isset($_POST['badges'])) {
+        update_post_meta($post_id, 'badges', sanitize_text_field($_POST['badges']));
+    }
+}
+add_action('save_post_promo', 'rocket_save_promo_meta');
