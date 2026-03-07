@@ -18,21 +18,29 @@
                 ← Назад к услугам
             </a>
 
-            <header class="single-promo__header">
-                <?php if (!empty($badges)) : ?>
-                    <div class="single-promo__badges">
-                        <?php foreach ($badges as $badge) : ?>
-                            <span class="single-promo__badge"><?php echo esc_html($badge); ?></span>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
+            <section class="single-promo__hero">
+                <div class="single-promo__hero-content">
+                    <?php if (!empty($badges)) : ?>
+                        <div class="single-promo__badges">
+                            <?php foreach ($badges as $badge) : ?>
+                                <span class="single-promo__badge"><?php echo esc_html($badge); ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
 
-                <h1><?php the_title(); ?></h1>
+                    <h1><?php the_title(); ?></h1>
 
-                <?php if ($price) : ?>
-                    <div class="single-promo__price">от <?php echo esc_html($price); ?> ₽</div>
-                <?php endif; ?>
-            </header>
+                    <?php if ($price) : ?>
+                        <div class="single-promo__price">от <?php echo esc_html($price); ?> ₽</div>
+                    <?php endif; ?>
+
+                    <?php if (has_excerpt()) : ?>
+                        <div class="single-promo__excerpt">
+                            <?php the_excerpt(); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </section>
 
             <?php if (has_post_thumbnail()) : ?>
                 <div class="single-promo__image">
@@ -43,6 +51,13 @@
             <div class="single-promo__content">
                 <?php the_content(); ?>
             </div>
+
+            <section class="single-promo__form-block">
+                <h2>Оставить заявку</h2>
+                <p>Заполните форму ниже, и мы свяжемся с вами в ближайшее время.</p>
+
+                <?php echo do_shortcode('[contact-form-7 id="ca7b288" title="Обратная связь"]'); ?>
+            </section>
         </article>
     <?php endwhile; endif; ?>
 </main>
