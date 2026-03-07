@@ -663,3 +663,118 @@ footer h3 {
     border: none;
     cursor: pointer;
 }
+
+.page .wpcf7 {
+    margin-top: 24px;
+}
+
+.page .wpcf7 form p {
+    margin: 0 0 20px;
+}
+
+.page .wpcf7 label {
+    display: block;
+    margin-bottom: 8px;
+    color: #222;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.page .wpcf7 input[type="text"],
+.page .wpcf7 input[type="email"],
+.page .wpcf7 textarea {
+    width: 100%;
+    border: 1px solid #d6d6d6;
+    border-radius: 8px;
+    background: #fff;
+    padding: 14px 16px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #222;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.page .wpcf7 input[type="text"]:focus,
+.page .wpcf7 input[type="email"]:focus,
+.page .wpcf7 textarea:focus {
+    border-color: #999;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.page .wpcf7 textarea {
+    min-height: 180px;
+    resize: vertical;
+}
+
+.page .wpcf7 input[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    border: 0;
+    border-radius: 8px;
+    background: #222;
+    color: #fff;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.page .wpcf7 input[type="submit"]:hover {
+    background: #111;
+    transform: translateY(-1px);
+}
+
+.page .wpcf7 input[type="submit"]:active {
+    transform: translateY(0);
+}
+
+.page .wpcf7-spinner {
+    margin: 10px 0 0 12px;
+}
+
+.page .wpcf7 form .wpcf7-response-output {
+    margin: 20px 0 0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.page .wpcf7-not-valid-tip {
+    margin-top: 6px;
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+
+    .page .wpcf7 input[type="text"],
+    .page .wpcf7 input[type="email"],
+    .page .wpcf7 textarea {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+
+    .page .wpcf7 input[type="submit"] {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+.page main {
+    max-width: 900px;
+}
+
+.page .wp-block-heading,
+.page h1 {
+    margin-bottom: 20px;
+}
+
+.page p {
+    line-height: 1.6;
+}
