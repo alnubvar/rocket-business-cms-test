@@ -9,7 +9,7 @@
             <?php
             $articles_query = new WP_Query([
                 'post_type' => 'post',
-                'posts_per_page' => 3
+                'posts_per_page' => -1
             ]);
 
             if ($articles_query->have_posts()) :
@@ -49,7 +49,7 @@
             <?php
             $promo_query = new WP_Query([
                 'post_type' => 'promo',
-                'posts_per_page' => 10
+                'posts_per_page' => -1
             ]);
 
             if ($promo_query->have_posts()) :
