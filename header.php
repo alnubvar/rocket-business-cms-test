@@ -8,10 +8,21 @@
 
 <body <?php body_class(); ?>>
 
-<header>
-    <div class="container">
-        <h1>
+<header class="site-header">
+    <div class="container site-header__inner">
+        <h1 class="site-header__logo">
             <a href="<?php echo esc_url(home_url('/')); ?>">Rocket Business</a>
         </h1>
+
+        <nav class="site-header__nav" aria-label="Главное меню">
+            <?php
+            wp_nav_menu([
+                'theme_location' => 'primary',
+                'container' => false,
+                'menu_class' => 'site-header__menu',
+                'fallback_cb' => false,
+            ]);
+            ?>
+        </nav>
     </div>
 </header>
